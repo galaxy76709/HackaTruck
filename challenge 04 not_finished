@@ -1,0 +1,127 @@
+//
+//  ContentView.swift
+//  project_04
+//
+//  Created by Turma02-17 on 20/03/25.
+//
+
+import SwiftUI
+
+struct ContentView: View {
+    @State private var showingAlert = false // lembrar de declarar a variavel
+    @State private var time        : Int = 0  // ao lado em cima do body
+    @State private var second_time : Int = 0  // ao lado em cima do body
+    @State private var result      : Int = 0
+    @State private var color_fundo       : Color = Color(.none)
+    
+
+    
+
+  
+    var gradiente = Gradient(colors: [Color("none"), Color("first_color")])
+// funcao para verificar se o resultado passou do escopo
+
+    
+    var body: some View {
+        let result = time + second_time
+
+        ZStack{
+            color_fundo
+            .ignoresSafeArea()
+            //Image("")
+            //    .resizable()
+            // .frame(width: 200, height: 200)
+            //  .padding()
+            VStack{
+                VStack{
+                    Text("Digite seu tempo")
+                        .font(.system(size: 22))
+                    HStack{
+                        TextField("Hello...?", value: $time, format: .number)
+                            .frame (width:200)
+                            .keyboardType(.decimalPad)
+                            .textContentType(.oneTimeCode)
+                            .font(.system(size: 22))
+                            .foregroundColor(.black)
+                            .multilineTextAlignment(.center)
+                            .background(Color.none)
+                        
+                    }
+                    
+                    VStack{
+                        Text("Digite algo")
+                            .font(.system(size: 20))
+                            .padding()
+                        HStack{
+                            TextField("Hello...?", value: $second_time, format: .number)
+                                .frame (width:200)
+                                .keyboardType(.decimalPad)
+                                .textContentType(.oneTimeCode)
+                                .font(.system(size: 20))
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                                .background(Color.none)
+                            
+                        }
+                        
+                        VStack{
+                            Text("Sua media foi: \(result)")
+                                .font(.system(size: 20))
+                                .padding()
+                                .frame (width:200)
+                                .keyboardType(.decimalPad)
+                                .textContentType(.oneTimeCode)
+                                .font(.system(size: 20))
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                                .background(Color.none)
+                        }
+                    
+                        
+                    }
+                    
+                    Spacer()
+                    
+                    
+                        if (result == 0){
+                            Image("Image")
+                            .frame(width: 200, height: 200)
+                            .scaledToFit()
+                            .clipShape(Circle())
+                                
+                            }
+                        
+                    if (result == 1){
+                        Image("Image")
+                        .resizable()
+                        .frame(width: 200, height: 200)
+                        .scaledToFit()
+                        .clipShape(Circle())
+                            
+                        }
+                    
+                        
+
+                    
+                    Spacer()
+                        VStack{
+                            Text("bla bla bla bla ")
+                                .multilineTextAlignment(.center)
+                                .background(Color.none)
+                                .background(.white)
+                            
+                            Button("mostrat alerta ou algo do genero") {
+                                showingAlert = true
+                            }
+                            .alert(isPresented: $showingAlert) {
+                                Alert(title: Text("to tentando"), message: Text("bla bla bla"), dismissButton: .default(Text("pegado isso")))
+                            }
+                    }
+                }
+            }
+        }
+    }
+}
+#Preview {
+    ContentView()
+}
