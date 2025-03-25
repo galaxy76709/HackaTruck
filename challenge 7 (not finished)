@@ -1,0 +1,105 @@
+//
+//  ContentView.swift
+//  desafio_07
+//
+//  Created by Turma02-17 on 24/03/25.
+//
+
+import SwiftUI
+
+struct ContentView: View {
+    
+    struct song : Identifiable {
+        var id:      Int
+        var name:    String
+        var artista: String
+        var capa:    String
+    }
+    
+    var arrayMusics = [
+        song (id: 1,  name: "Denial you win again", artista: "The Buttertones", capa :"https://akamai.sscdn.co/uploadfile/letras/albuns/8/e/4/5/1128801628524703.jpg"),
+        song (id: 2,  name: "segunda musica, artista: "The Buttertones", capa :"semideias"),
+        song (id: 3 , name: "terceiro musica", artista: "The Buttertones", capa :"semideias")
+    ]
+    var body: some View {
+        NavigationStack{
+            ZStack {
+                Color(.gray)
+                    .ignoresSafeArea(.all)
+                
+                
+                VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+                    Image("black_cat")
+                    
+                    
+                        .resizable()
+                        .scaledToFit()
+                    
+                        .frame(width: 200, height: 200)
+                    VStack{
+                        
+                        VStack{
+                            
+                            Text("My songs in hacka: ")
+                            
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                                .font(.system(size:33))
+                            
+                            HStack{
+                                
+                                Image("black_cat")
+                                    .resizable()
+                                //                  .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                Spacer()
+                                Text("...?")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:20))
+                                    .padding(EdgeInsets())
+                                Spacer()
+                            }
+                            ForEach( arrayMusics) { element in
+//                            NavigationLink
+                            HStack{
+                                
+                                AsyncImage(url: URL(string: element.capa ))
+                                { image in image
+                                        .resizable()
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                
+                                .frame(width: 80, height: 80)
+                                HStack{
+                                    VStack {
+                                        ////                                    ForEach(arrayMusics, id: \.id) {  item in
+                                        ////                                        Text("musica: \(song.name.artista.capa)")
+                                        ////                                    }
+                                        //                                    .font(.system(size:30))
+                                        
+                                        VStack{
+                                            Text(element.name)
+                                                .font(.system(size:20))
+                                            
+                                        }
+                                    }
+                                    
+                                    
+                                }
+                            }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                Spacer()
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
