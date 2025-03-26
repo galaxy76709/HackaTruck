@@ -1,0 +1,118 @@
+import SwiftUI
+import MapKit
+
+struct Localizacao: Hashable {
+    let nome: String
+    let foto: String
+    let descricao: String
+    let latitude: Double
+    let longitude: Double
+    
+    var coordenada: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(nome)
+        hasher.combine(latitude)
+        hasher.combine(longitude)
+    }
+}
+
+struct ContentView: View {
+    
+        
+        
+    
+    // Lista de localizações (corrigi as coordenadas que estavam trocadas)
+    let localizacoes = [
+        Localizacao(nome: "Chicago, EUA",
+                   foto: "https://preview.redd.it/5b3ht2063woe1.png?width=640&crop=smart&auto=webp&s=9f0947921639806385ce92e53396538680c21dc1",
+                   descricao: "Destruição, batalha de Conquest",
+                   latitude: 41.8781, longitude: -87.6298),
+        
+        Localizacao(nome: "Las Vegas, EUA",
+                   foto: "https://static1.cbrimages.com/wordpress/wp-content/uploads/2016/12/Invincible-Las-Vegas-Explosion.jpg",
+                   descricao: "Destruição: Confronto de Omni-Man contra Viltrumitas.",
+                   latitude: 36.1699, longitude: -115.1398),
+        
+        Localizacao(nome: "Washington DC",
+                   foto: "",
+                   descricao: "Destruição: Ataque a prédios governamentais.",
+                   latitude: 38.9072, longitude: -77.0369),
+        
+        Localizacao(nome: "Nova York, EUA",
+                   foto: "https://thenational-the-national-prod.cdn.arcpublishing.com/resizer/v2/WIEUZ62G6CRKF47LQPQZEATIHY.jpg",
+                   descricao: "Destruição: Batalhas aéreas e colisões de Viltrumitas.",
+                   latitude: 40.7128, longitude: -74.0060)
+    ]
+    
+    @State private var regiao = MapCameraPosition.region(MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 39.8283, longitude: -98.5795),
+        span: MKCoordinateSpan(latitudeDelta: 30, longitudeDelta: 30)))
+    
+    @State private var selectedLocation: Localizacao = Localizacao(nome: "", foto: "", descricao: "", latitude: 0, longitude: 0)
+    
+    @State var mostrarSheet: Bool = false
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Map(position: $regiao) {
+                    ForEach(localizacoes, id: \.self) { local in
+                        Annotation(local.nome, coordinate: local.coordenada) {
+                            Button {
+                                selectedLocation = local
+                                mostrarSheet = true
+                            } label: {
+                                Image(systemName: "mappin.circle.fill")
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .foregroundStyle(.red)
+                                    .background(.white)
+                                    .clipShape(Circle())
+                            }
+                        }
+                    }
+                }
+                .ignoresSafeArea()
+                .sheet(isPresented: $mostrarSheet) {
+                    LocationDetailView(location: $selectedLocation)
+                }
+            }
+        }
+    }
+}
+
+struct LocationDetailView: View {
+    @Binding var location: Localizacao
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text(location.nome)
+                .font(.largeTitle.bold())
+            
+            if !location.foto.isEmpty {
+                AsyncImage(url: URL(string: location.foto)) { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .cornerRadius(10)
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(maxHeight: 200)
+            }
+            
+            Text(location.descricao)
+                .font(.body)
+            
+            Spacer()
+        }
+        .padding()
+//        .presentationDetents([.medium])
+    }
+}
+
+#Preview {
+    ContentView()
+}
